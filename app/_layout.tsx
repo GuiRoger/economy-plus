@@ -1,24 +1,49 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+// RootLayout.tsx
+import React from 'react';
+import { Appbar, Provider as PaperProvider } from 'react-native-paper';
+import TabLayout from './(tabs)/_layout';
+import AddScreen from './(tabs)/add';
+import BudgetScreen from './(tabs)/budget';
+import DashboardScreen from './(tabs)/dashboard';
+import DebitsScreen from './(tabs)/debits';
+import HistoryScreen from './(tabs)/history';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: 'dashboard', title: 'Overview', focusedIcon: 'home', unfocusedIcon: 'home-outline' },
+    { key: 'add', title: 'Add', focusedIcon: 'plus' },
+    { key: 'history', title: 'History', focusedIcon: 'history' },
+    { key: 'budget', title: 'Budget', focusedIcon: 'currency-usd', unfocusedIcon: 'currency-usd' },
+    { key: 'debits', title: 'Debits', focusedIcon: 'file', unfocusedIcon: 'file-outline' },
+  ]);
+
+  // (opcional) você pode criar o renderScene aqui e também passar adiante
+  const renderScene = {
+    dashboard: DashboardScreen,
+    add: AddScreen,
+    history: HistoryScreen,
+    budget: BudgetScreen,
+    debits: DebitsScreen,
+  };
+
+  const currentTitle = routes[index]?.title ?? 'Title';
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <PaperProvider>
+      <Appbar.Header mode="center-aligned">
+        {(currentTitle !== 'Overview' &&
+          <Appbar.BackAction onPress={() => { }} />)}
+        <Appbar.Content title={currentTitle} />
+      </Appbar.Header>
+
+      <TabLayout
+        index={index}
+        setIndex={setIndex}
+        routes={routes}
+        renderSceneMap={renderScene}
+      />
+    </PaperProvider>
   );
 }

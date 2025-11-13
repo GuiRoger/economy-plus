@@ -1,35 +1,22 @@
-import { Tabs } from 'expo-router';
+// TabLayout.tsx
 import React from 'react';
+import { BottomNavigation } from 'react-native-paper';
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+type Props = {
+  index: number;
+  setIndex: (i: number) => void;
+  routes: { key: string; title: string; focusedIcon?: string; unfocusedIcon?: string }[];
+  renderSceneMap: Record<string, React.ComponentType<any>>;
+};
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function TabLayout({ index, setIndex, routes, renderSceneMap }: Props) {
+  const renderScene = BottomNavigation.SceneMap(renderSceneMap);
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+    <BottomNavigation
+      navigationState={{ index, routes }}
+      onIndexChange={setIndex}
+      renderScene={renderScene}
+    />
   );
 }
