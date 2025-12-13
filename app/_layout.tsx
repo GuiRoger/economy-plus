@@ -1,4 +1,5 @@
 // RootLayout.tsx
+import { paperDarkTheme } from '@/theme/paperTheme';
 import React from 'react';
 import { Appbar, Provider as PaperProvider } from 'react-native-paper';
 import TabLayout from './(tabs)/_layout';
@@ -31,7 +32,7 @@ export default function RootLayout() {
   const currentTitle = routes[index]?.title ?? 'Title';
 
   return (
-    <PaperProvider>
+    <PaperProvider theme={paperDarkTheme}>
       <Appbar.Header mode="center-aligned">
         {(currentTitle !== 'Overview' &&
           <Appbar.BackAction onPress={() => { }} />)}
