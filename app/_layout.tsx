@@ -1,8 +1,10 @@
 // RootLayout.tsx
+import { initDb } from '@/backend/storage/db';
+import { paperDarkTheme } from '@/theme/paperTheme';
 import React from 'react';
 import { Appbar, Provider as PaperProvider } from 'react-native-paper';
 import TabLayout from './(tabs)/_layout';
-import AddScreen from './(tabs)/add';
+import { AddTransactionScreen } from './(tabs)/add';
 import BudgetScreen from './(tabs)/budget';
 import DashboardScreen from './(tabs)/dashboard';
 import DebitsScreen from './(tabs)/debits';
@@ -10,6 +12,9 @@ import HistoryScreen from './(tabs)/history';
 
 
 export default function RootLayout() {
+  React.useEffect(() => {
+    initDb();
+  }, []);
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'dashboard', title: 'Overview', focusedIcon: 'home', unfocusedIcon: 'home-outline' },
@@ -19,10 +24,9 @@ export default function RootLayout() {
     { key: 'debits', title: 'Debits', focusedIcon: 'file', unfocusedIcon: 'file-outline' },
   ]);
 
-  // (opcional) você pode criar o renderScene aqui e também passar adiante
   const renderScene = {
     dashboard: DashboardScreen,
-    add: AddScreen,
+    add: AddTransactionScreen,
     history: HistoryScreen,
     budget: BudgetScreen,
     debits: DebitsScreen,
@@ -31,7 +35,7 @@ export default function RootLayout() {
   const currentTitle = routes[index]?.title ?? 'Title';
 
   return (
-    <PaperProvider>
+    <PaperProvider theme={paperDarkTheme}>
       <Appbar.Header mode="center-aligned">
         {(currentTitle !== 'Overview' &&
           <Appbar.BackAction onPress={() => { }} />)}
@@ -39,6 +43,7 @@ export default function RootLayout() {
       </Appbar.Header>
 
       <TabLayout
+
         index={index}
         setIndex={setIndex}
         routes={routes}
