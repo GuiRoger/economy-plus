@@ -1,6 +1,6 @@
 // TabLayout.tsx
 import React from 'react';
-import { BottomNavigation } from 'react-native-paper';
+import { BottomNavigation, useTheme } from 'react-native-paper';
 
 type Props = {
   index: number;
@@ -10,13 +10,27 @@ type Props = {
 };
 
 export default function TabLayout({ index, setIndex, routes, renderSceneMap }: Props) {
+
+  const theme = useTheme();
   const renderScene = BottomNavigation.SceneMap(renderSceneMap);
 
   return (
     <BottomNavigation
+      theme={theme}
       navigationState={{ index, routes }}
       onIndexChange={setIndex}
       renderScene={renderScene}
+      shifting={false}
+      labeled
+
+      activeColor={theme.colors.primary}
+      inactiveColor={theme.colors.onSurfaceVariant}
+
+      barStyle={{
+        backgroundColor: theme.colors.surface,
+        borderTopWidth: 1,
+        borderTopColor: theme.colors.outlineVariant,
+      }}
     />
   );
 }

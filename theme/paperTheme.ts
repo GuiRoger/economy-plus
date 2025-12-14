@@ -44,6 +44,6 @@ export const paperDarkTheme: MD3Theme = {
 
     // Sombras/elevation (Paper controla muito disso internamente)
     shadow: "#000000",
-    scrim: "#000000",
+    scrim: "#000000"
   },
 };
