@@ -8,7 +8,7 @@ import { Controller, useForm } from "react-hook-form";
 import { View } from "react-native";
 import { Button, Chip, HelperText, SegmentedButtons, Text, TextInput } from "react-native-paper";
 
-export function AddTransactionScreen() {
+export default function AddTransactionScreen() {
   const categories = ['Food', 'Transport', 'Shopping', 'Bills', 'Entertainment', 'Health', 'Travel', 'Education'];
 
   const [type, setType] = React.useState<"expense" | "income">("expense");
@@ -31,9 +31,6 @@ export function AddTransactionScreen() {
     console.log("SUBMIT OK =>", data);
 
     const amountCents = brlToCents(data.amountText);
-
-
-
     addTransaction({
       id: Crypto.randomUUID(),
       type, // ✅ respeita expense/income

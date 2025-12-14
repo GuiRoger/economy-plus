@@ -22,10 +22,8 @@ export default function TabLayout({ index, setIndex, routes, renderSceneMap }: P
       renderScene={renderScene}
       shifting={false}
       labeled
-
       activeColor={theme.colors.primary}
       inactiveColor={theme.colors.onSurfaceVariant}
-
       barStyle={{
         backgroundColor: theme.colors.surface,
         borderTopWidth: 1,

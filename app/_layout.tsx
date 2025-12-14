@@ -2,13 +2,13 @@
 import { initDb } from '@/backend/storage/db';
 import { paperDarkTheme } from '@/theme/paperTheme';
 import React from 'react';
-import { Appbar, Provider as PaperProvider } from 'react-native-paper';
+import { Appbar, Provider as PaperProvider, Portal } from 'react-native-paper';
 import TabLayout from './(tabs)/_layout';
-import { AddTransactionScreen } from './(tabs)/add';
 import BudgetScreen from './(tabs)/budget';
 import DashboardScreen from './(tabs)/dashboard';
 import DebitsScreen from './(tabs)/debits';
-import HistoryScreen from './(tabs)/history';
+import AddTransactionScreen from './(tabs)/transactions/add';
+import TransactionsScreen from './(tabs)/transactions/index';
 
 
 export default function RootLayout() {
@@ -27,7 +27,7 @@ export default function RootLayout() {
   const renderScene = {
     dashboard: DashboardScreen,
     add: AddTransactionScreen,
-    history: HistoryScreen,
+    history: TransactionsScreen,
     budget: BudgetScreen,
     debits: DebitsScreen,
   };
@@ -36,19 +36,23 @@ export default function RootLayout() {
 
   return (
     <PaperProvider theme={paperDarkTheme}>
-      <Appbar.Header mode="center-aligned">
-        {(currentTitle !== 'Overview' &&
-          <Appbar.BackAction onPress={() => { }} />)}
-        <Appbar.Content title={currentTitle} />
-      </Appbar.Header>
+      <Portal.Host>
 
-      <TabLayout
 
-        index={index}
-        setIndex={setIndex}
-        routes={routes}
-        renderSceneMap={renderScene}
-      />
+        <Appbar.Header mode="center-aligned">
+          {(currentTitle !== 'Overview' &&
+            <Appbar.BackAction onPress={() => { }} />)}
+          <Appbar.Content title={currentTitle} />
+        </Appbar.Header>
+
+        <TabLayout
+
+          index={index}
+          setIndex={setIndex}
+          routes={routes}
+          renderSceneMap={renderScene}
+        />
+      </Portal.Host>
     </PaperProvider>
   );
 }

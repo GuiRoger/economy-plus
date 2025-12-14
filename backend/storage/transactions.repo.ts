@@ -124,3 +124,65 @@ export function getNextMonthsForecast(params: { months: number }) {
 
     return result;
 }
+
+
+function getMonthRange(year: number, month1to12: number) {
+    const start = new Date(year, month1to12 - 1, 1).toISOString();
+    const end = new Date(year, month1to12, 1).toISOString();
+    return { start, end };
+}
+
+export function listTransactionsFiltered(params: {
+    limit: number;
+    cursorDate?: string;        // cursor (date do último item)
+    year: number;               // ano do filtro
+    month: number | null;       // 1..12 ou null (todos)
+    category?: string | null;   // null = todos
+    type?: TxType | null;       // null = todos
+}) {
+    const where: string[] = [];
+    const values: any[] = [];
+
+    // mês
+    if (params.month) {
+        const { start, end } = getMonthRange(params.year, params.month);
+        where.push(`date >= ? AND date < ?`);
+        values.push(start, end);
+    }
+
+    if (params.category) {
+        where.push(`category = ?`);
+        values.push(params.category);
+    }
+
+    if (params.type) {
+        where.push(`type = ?`);
+        values.push(params.type);
+    }
+
+    // paginação
+    if (params.cursorDate) {
+        where.push(`date < ?`);
+        values.push(params.cursorDate);
+    }
+
+    const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
+
+    const sql = `
+    SELECT id, type, amount_cents, description, category, date, created_at
+    FROM transactions
+    ${whereSql}
+    ORDER BY date DESC
+    LIMIT ?;
+  `;
+
+    values.push(params.limit);
+
+    return db.getAllSync<Transaction>(sql, values);
+}
+
+export function listDistinctCategories() {
+    return db.getAllSync<{ category: string }>(
+        `SELECT DISTINCT category FROM transactions ORDER BY category ASC;`
+    );
+}
